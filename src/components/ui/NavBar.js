@@ -1,7 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
-const NavBar = ({auth,logOutFunction}) => {
+const NavBar = ({auth,authHit,setAuthHit}) => {
+    const history=useHistory()
+    const makeLogout=()=>{
+        localStorage.clear();
+        setAuthHit(!authHit)
+        history.push('/');
+
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="navbar-brand">Idea</div>
@@ -20,7 +27,7 @@ const NavBar = ({auth,logOutFunction}) => {
                         <Link className="nav-link" to="/login">Login</Link>
                     </li>}
                 </ul>
-                {auth&& <button className="btn btn-danger" onClick={()=>logOutFunction(false)}>Logout</button>}
+                {auth&& <button className="btn btn-danger" onClick={()=>makeLogout()}>Logout</button>}
                 {/* <form className="form-inline my-2 my-lg-0">
                     <input className="form-control mr-sm-2" type="search" placeholder="Search" />
                     <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

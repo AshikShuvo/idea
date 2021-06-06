@@ -3,18 +3,24 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
 import ModelType from "./pages/ModelType";
 import LoginPage from "./pages/LoginPage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isAuth } from "./Auth/Auth";
 function App() {
-    const [auth,setAuth]=useState(false);
+   const [isAuthenticated,setAuth]=useState(isAuth());
+   const [authHit,setAuthHit]=useState(false)
+   useEffect(() => {
+    setAuth(isAuth())
+     
+   }, [authHit])
   return (
     <>
       
       <Router>
-       <NavBar auth={auth} logOutFunction={setAuth}/>
+       <NavBar auth={isAuthenticated} authHit={authHit} setAuthHit={setAuthHit}/>
         <Switch>
           <Route path="/" exact={true} component={()=><HomePage  />} />
-          <Route path="/models" exact={true} component={()=><ModelType auth={auth}/>} />
-          <Route path="/login" exact={true} component={()=><LoginPage/>} />
+          <Route path="/models" exact={true} component={()=><ModelType auth={isAuthenticated}/>} />
+          <Route path="/login" exact={true} component={()=><LoginPage isAuthenticated={isAuthenticated} authHit={authHit} setAuthHit={setAuthHit}/>} />
         </Switch>
       </Router>
     </>

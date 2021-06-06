@@ -1,11 +1,17 @@
+import axios from 'axios';
 import React, { useState } from 'react'
+import { Redirect, useHistory } from 'react-router';
 import '../customcss/login.css'
 
-const LoginPage = () => {
+const LoginPage = ({isAuthenticated ,authHit,setAuthHit}) => {
     const [inputs,setInputs]=useState({
         email:'',
         password:''
     });
+    const [httpError,setHttpError]=useState({
+        error404:false,
+        error401:false
+    })
     const [error,setError]=useState({
         email:{
             isNotAnEmail:false,
@@ -14,6 +20,12 @@ const LoginPage = () => {
             isEmpty:false
         }
     });
+    const history=useHistory();
+    if(isAuthenticated){
+        return <Redirect to="/"/>
+    }
+
+
     const validateEmail=(e)=>{
         const regex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -58,16 +70,36 @@ const LoginPage = () => {
     }
     const submitHandler=(e)=>{
         e.preventDefault();
-        const cr=`${inputs.email},${inputs.password}`
-        alert(cr)
+        const body={
+            email:inputs.email,
+            password:inputs.password
+        };
+        axios.post(`${process.env.REACT_APP_BASE_API}/login`,body)
+        .then(response=>{
+           
+            localStorage.setItem("w_auth", JSON.stringify(response.data));
+            setHttpError({...httpError,error404:false,error401:false})
+            setAuthHit(!authHit)
+            history.push('/')
+          
+        }).catch(error=>{
+            if(error.response.status===404){
+                setHttpError({...httpError,error404:true})
+            }else if(error.response.status===401){
+                setHttpError({...httpError,error401:true})
+            }
+            console.log(error.response.status)
+        })
+
     }
     return (
         <div>
-             <div class="full-screen-container">
-                <div class="login-container">
-                    <h3 class="login-title">Welcome</h3>
+             <div className="full-screen-container">
+                <div className="login-container">
+                    <h3 className="login-title">Welcome</h3>
+                    {(httpError.error401||httpError.error404)&&<span style={{color:'red'}}>Credential does not match</span>}
                     <form >
-                        <div class="input-group">
+                        <div className="input-group">
                             <label>Email</label>
                             <input type="email" onBlur={e=>validateEmail(e)} value={inputs.email} onChange={e=>setInputs({...inputs,email:e.target.value})}/>
                             {
@@ -77,14 +109,14 @@ const LoginPage = () => {
                                 error.email.isNotAnEmail&&<span style={{color:'red'}}>You Must Provide an Valid Email</span>
                             }
                         </div>
-                        <div class="input-group">
+                        <div className="input-group">
                             <label>Password</label>
                             <input type="password" onBlur={e=>validatePassword(e)} value={inputs.password} onChange={e=>setInputs({...inputs,password:e.target.value})}/>
                             {
                                 error.password.isEmpty&&<span style={{color:'red'}}>Password is Required</span>
                             }
                         </div> 
-                        <button onClick={e=>submitHandler(e)} class="login-button" >Sign In</button>
+                        <button onClick={e=>submitHandler(e)} className="login-button" >Sign In</button>
                     </form>
                 </div>
             </div>
