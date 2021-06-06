@@ -1,0 +1,63 @@
+
+.card__container{
+    display: inline-block;
+    
+    width: 30%;
+    text-align: center;
+    font-family: sans-serif;
+    background-color: #ddd;
+    padding: 10px;
+    margin: 20px;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 4px 13px 27px 1px rgb(0 0 0 / 23%);
+transition: all 0.5s linear;
+overflow: hidden;
+}
+.card__container:hover{
+  background-color: #e9e9f1;
+transition: all 0.5s linear;
+cursor: pointer;
+
+}
+.card__container::before{
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 0;
+    width: 11%;
+    height: 15%;
+    background-color: #3131a5;
+    color: #fff;
+    border-radius: 10px;
+    border-top-right-radius: 100%;
+    border-bottom-right-radius: 100%;
+} 
+.card__container::after{
+    position: absolute;
+    content: '';
+    right: 0;
+    top: 0;
+    width: 11%;
+    height: 15%;
+    background-color: #3131a5;
+    color: #fff;
+    border-radius: 10px;
+    border-top-left-radius: 100%;
+    border-bottom-left-radius: 100%;
+} 
+.card__container:hover::before,
+.card__container:hover::after{
+    background-color: #0000ff;
+}
+.card__container h1{
+    border-bottom: 2px solid #c3bcbc;
+    padding-bottom: 5px;
+}
+.card__container p {
+    padding: 5px;
+    line-height: 1.6rem;
+}
+.card__container span{
+    border-bottom: 2px #a5a0a0 solid;
+}
