@@ -1,14 +1,15 @@
 import React from 'react'
 import "../../customcss/card.css"
 const NewCard = ({data}) => {
-    const {Name,DisplayName,Description}=data
+    const {Brand,DisplayName,Model}=data
 
     return (
         <div className="card__container " >
             <div class="go">
-                <h3>{Name}</h3>
-                <h1>{DisplayName}</h1>
-                {Description&&<span>{Description}</span>}
+            <h3>{DisplayName}</h3>
+                <h4>{Brand}</h4>
+                
+                {Model&&<span>{Model}</span>}
             </div>
         </div>
     )
